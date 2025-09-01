@@ -1,0 +1,151 @@
+--- Invoice 1 ---
+Invoice #: INV-1001
+Date: 08/01/2025
+Bill To: Alice Morgan
+Email: alice.morgan@abc.com
+Amount Due: $1,200.00
+Due Date: 08/15/2025
+
+--- Invoice 2 ---
+Invoice Number: 2025-INV-002
+Customer: John Smith
+Date Issued: August 2, 2025
+Phone: (555) 123-4567
+Total: $560.75
+Due: September 2, 2025
+
+--- Invoice 3 ---
+INVOICE ID: 003-2025
+Date: 2025-08-03
+Client: Mary Johnson
+Email Address: mary.j@example.org
+Total Due: USD 980.00
+Payment Deadline: 2025/08/20
+
+--- Invoice 4 ---
+#Invoice: INV-0004
+Date: 4th Aug 2025
+Customer Name: Rick Dalton
+Amount: $420
+Email: rickd@hollywood.net
+Due: 18th Aug 2025
+
+--- Invoice 5 ---
+Invoice No.: INV-0005
+Date: 08-05-2025
+To: Nancy Adams
+Email: nadams@email.com
+Phone Number: 555.789.2345
+Total Payable: $745.50
+Due On: 08-20-2025
+
+--- Invoice 6 ---
+Invoice Reference: 006
+Client: Tom Ford
+Invoice Date: 5 August 2025
+Total Amount: $1,100.00
+Email: tomford@fashion.co.uk
+
+--- Invoice 7 ---
+Invoice #007
+Date of Issue: 6th August 2025
+Customer: Betty Cooper
+Email ID: betty.c@riverdale.edu
+Amount Due: $300.00
+Deadline: 08/31/2025
+
+--- Invoice 8 ---
+INVOICE: 008-25
+Date: 2025.08.07
+To: Chris Pine
+Phone: 555-333-8877
+Email: chris@pineapple.tv
+Amount: $215.75
+
+--- Invoice 9 ---
+Invoice Num: INV009
+Customer Name: Diana Prince
+Date: 8/8/25
+Email: diana@amazon.co
+Amount Due: $999.99
+
+--- Invoice 10 ---
+Bill ID: 010-A
+Date Issued: August 9, 2025
+Client: Barry Allen
+Email: flash@fastmail.com
+Contact: 555 222 1111
+Total Billed: $1,025.00
+
+--- Invoice 11 ---
+Invoice No: INV-011
+Billing Date: 2025-Aug-10
+Customer: Sarah Connor
+Email: sarah@resistance.org
+Due: 2025-Aug-25
+Amount: $810.00
+
+--- Invoice 12 ---
+Invoice #: 012
+Client Name: Bruce Wayne
+Date: 10-08-2025
+Amount Due: $5,000
+Email: bruce@wayneenterprises.com
+
+--- Invoice 13 ---
+Invoice: INV-0013
+Issued: 2025-08-11
+To: Clark Kent
+Amount: USD 750.00
+Email: c.kent@dailyplanet.news
+
+--- Invoice 14 ---
+Invoice ID: #014
+Date: Aug 12th, 2025
+Customer: Peter Parker
+Email Address: spidey@web.com
+Total: $340.25
+
+--- Invoice 15 ---
+Bill #: INV015
+Customer Name: Tony Stark
+Date Issued: 08-13-2025
+Total Payable: $3,250.00
+Email: tony.stark@starkindustries.ai
+
+--- Invoice 16 ---
+Invoice Number: 016
+Client: Steve Rogers
+Invoice Date: 14/Aug/2025
+Total: $480.00
+Email: s.rogers@shield.org
+
+--- Invoice 17 ---
+INV#: 017-2025
+Billed To: Natasha Romanoff
+Date: 08/15/25
+Total Amount Due: $600
+Email: natasha@blackwidow.org
+
+--- Invoice 18 ---
+Invoice Number: 018
+Date of Invoice: 2025.08.16
+Customer: Bruce Banner
+Email: hulk@green.com
+Amount: $1,275
+
+--- Invoice 19 ---
+#INV019
+Date: August 17 2025
+To: Wanda Maximoff
+Email: w.maximoff@hexmail.com
+Amount Due: $1,680.00
+
+--- Invoice 20 ---
+Invoice No: INV-020
+Date: 2025/08/18
+Customer: Stephen Strange
+Email: strange@sanctum.com
+Phone: +1-555-567-1234
+Amount Due: $2,400.00
+
