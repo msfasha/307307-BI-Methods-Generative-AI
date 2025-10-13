@@ -73,7 +73,7 @@ streamlit run frontend/app.py
 
 The application will open in your browser at `http://localhost:8501`.
 
-## 📖 Usage Guide
+## Usage Guide
 
 ### 1. Upload Data
 - Go to the "Upload Data" tab
