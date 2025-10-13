@@ -1,8 +1,8 @@
-# 📊 Conversational Analytics Application
+# Conversational Analytics Application
 
 A multi-agent conversational analytics system that allows users to upload CSV files and ask questions about their data using natural language. The application uses multiple AI agents to provide comprehensive data analysis and insights.
 
-## 🚀 Features
+## Features
 
 - **Natural Language Queries**: Ask questions about your data in plain English
 - **Speech Input**: Use voice commands to interact with the system
@@ -11,17 +11,17 @@ A multi-agent conversational analytics system that allows users to upload CSV fi
 - **Educational**: Learn about data analysis and AI agents
 - **Browser-based**: No complex setup required
 
-## 🤖 AI Agents
+## AI Agents
 
 The system uses five specialized AI agents:
 
-1. **🧠 Manager Agent**: Orchestrates the analysis workflow and coordinates other agents
-2. **🧹 Data Cleaner Agent**: Identifies and fixes data quality issues
-3. **📊 Analyst Agent**: Performs statistical analysis and generates insights
-4. **💻 Code Executor Agent**: Generates and executes Python code for analysis
-5. **📝 Report Writer Agent**: Creates comprehensive reports and summaries
+1. **Manager Agent**: Orchestrates the analysis workflow and coordinates other agents
+2. **Data Cleaner Agent**: Identifies and fixes data quality issues
+3. **Analyst Agent**: Performs statistical analysis and generates insights
+4. **Code Executor Agent**: Generates and executes Python code for analysis
+5. **Report Writer Agent**: Creates comprehensive reports and summaries
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Frontend**: Streamlit
 - **AI Framework**: CrewAI
@@ -30,13 +30,13 @@ The system uses five specialized AI agents:
 - **Speech Recognition**: Browser-based Web Speech API
 - **Visualization**: Plotly, Seaborn, Matplotlib
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Python 3.8 or higher
 - Google Gemini API key (free tier available)
 - Modern web browser (Chrome, Edge, Firefox)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone the Repository
 
@@ -98,7 +98,7 @@ The application will open in your browser at `http://localhost:8501`.
 - View executive summaries, insights, and detailed reports
 - Access generated Python code and execution results
 
-## 📊 Example Data
+## Example Data
 
 The application includes sample data in the `examples/` directory:
 - `sample_data.csv`: Employee dataset with salary, department, and performance data
@@ -121,7 +121,7 @@ You can customize the application by modifying:
 - UI components in `frontend/components/`
 - Data processing logic in `backend/utils/`
 
-## 📚 Educational Value
+## Educational Value
 
 This application is designed for educational purposes to help students learn about:
 
@@ -131,7 +131,7 @@ This application is designed for educational purposes to help students learn abo
 - **Conversational AI**: Building interactive AI interfaces
 - **Data Science**: Practical data analysis techniques
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 conversational_analytics/
@@ -149,7 +149,7 @@ conversational_analytics/
 └── README.md           # This file
 ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -162,7 +162,7 @@ conversational_analytics/
 
 Enable debug mode by setting `DEBUG=True` in your `.env` file for detailed logging.
 
-## 🤝 Contributing
+## Contributing
 
 This is an educational project. Contributions are welcome for:
 - Additional agent capabilities
@@ -170,23 +170,21 @@ This is an educational project. Contributions are welcome for:
 - Documentation enhancements
 - Bug fixes
 
-## 📄 License
+## License
 
 This project is for educational purposes. Please respect the terms of service for all third-party APIs used.
 
-## 🆘 Support
+## Support
 
 For questions or issues:
 1. Check the troubleshooting section
 2. Review the example data and questions
 3. Contact your instructor or course administrator
 
-## 🔄 Updates
+## Updates
 
 - **v1.0.0**: Initial release with basic multi-agent functionality
 - **v1.1.0**: Added speech input capabilities
 - **v1.2.0**: Enhanced UI and error handling
 
 ---
-
-**Happy Analyzing! 📊🤖**
