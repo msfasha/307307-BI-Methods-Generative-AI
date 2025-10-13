@@ -104,7 +104,7 @@ The application includes sample data in the `examples/` directory:
 - `sample_data.csv`: Employee dataset with salary, department, and performance data
 - `test_questions.md`: Sample questions to test the system
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
