@@ -1,9 +1,13 @@
 from google import genai
+from google.genai import types
 
-# The client gets the API key from the environment variable `GEMINI_API_KEY`.
-client = genai.Client(api_key="YOUR KEY GOES HERE")
+client = genai.Client()
 
 response = client.models.generate_content(
-    model="gemini-2.5-flash", contents="Explain how AI works in a few words"
+    model="gemini-2.5-flash",
+    contents="Explain how AI works in a few words",
+    config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(thinking_budget=0) # Disables thinking, making the response faster but less accurate
+    ),
 )
 print(response.text)
