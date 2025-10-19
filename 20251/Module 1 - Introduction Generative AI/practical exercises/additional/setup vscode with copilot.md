@@ -1,95 +1,88 @@
-# Crash Course: Microsoft Copilot in VS Code for Jupyter Notebooks
+## Setup VSCode and Copilot
 
-## 1. What is Copilot in VS Code?
+### 1. Install Python
 
-Microsoft Copilot (previously GitHub Copilot) is an AI assistant integrated into VS Code that helps with:
+* Download and install Python from [python.org/downloads](https://www.python.org/downloads/).
+* During installation, make sure to check **“Add Python to PATH”**.
+* Verify installation by running in a terminal:
 
-* Code completions and auto-suggestions
-* Generating functions or entire code cells from comments
-* Explaining or debugging code
-* Writing documentation, tests, or data visualizations
-
-When combined with Jupyter Notebooks, Copilot becomes a powerful assistant for data analysis, teaching, and experimentation.
-
----
-
-## 2. Setup and Installation
-
-### Step 1. Install VS Code
-
-Download and install Visual Studio Code from:
-[https://code.visualstudio.com/](https://code.visualstudio.com/)
+  ```
+  python --version
+  ```
 
 ---
 
-### Step 2. Install the Python and Jupyter extensions
+### 2. Install Visual Studio Code
 
-In VS Code:
-
-1. Go to **Extensions (Ctrl+Shift+X)**
-2. Install:
-
-   * **Python** (by Microsoft)
-   * **Jupyter** (by Microsoft)
-
-These extensions allow you to open and run `.ipynb` notebooks directly inside VS Code.
+* Download and install VS Code from [code.visualstudio.com](https://code.visualstudio.com/).
 
 ---
 
-### Step 3. Install GitHub Copilot
+### 3. Install Required VS Code Extensions
 
-In VS Code:
+Open VS Code, press **Ctrl+Shift+X** (or **Cmd+Shift+X** on macOS), and install these extensions:
 
-1. Open the **Extensions** tab.
-2. Search for **GitHub Copilot** and install it.
-3. Optionally, install **GitHub Copilot Chat** for chat-based assistance.
-
----
-
-### Step 4. Sign in to GitHub
-
-When you first activate Copilot:
-
-1. You’ll be asked to sign in to your GitHub account.
-2. Approve the authorization in your browser.
-3. Return to VS Code and confirm the connection.
-
-You need a valid Copilot subscription or access through your organization (for example, through Microsoft educational programs).
+1. **Python** (by Microsoft)
+2. **Jupyter** (by Microsoft)
+3. **GitHub Copilot**
+4. **GitHub Copilot Chat** (optional, but useful for in-editor chat help)
 
 ---
 
-### Step 5. Enable Copilot for Notebooks
+### 4. Install Jupyter Tools in Python
 
-Once everything is installed:
+In a terminal or the VS Code terminal, run:
 
-1. Open a Jupyter notebook (`.ipynb`) in VS Code.
-2. Click the **Copilot icon** in the bottom-right status bar.
-3. Make sure “Enable Copilot in Notebooks” is turned on.
-
----
-
-## 3. Using Copilot in Jupyter Notebooks
-
-### Inline Suggestions
-
-Type a comment describing what you want, for example:
-
-```python
-# plot the correlation matrix for this dataframe
+```
+pip install notebook ipykernel jupyter
 ```
 
-After pressing **Enter**, Copilot will suggest:
+---
 
-```python
-import seaborn as sns
-import matplotlib.pyplot as plt
+### 5. Create a GitHub Account
 
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
-plt.show()
-```
+* Go to [github.com](https://github.com/) and create an account.
+* You can use your Google account to sign up.
 
-Press **Tab** to accept or **Esc** to dismiss.
+---
 
+### 6. Connect VS Code to GitHub Copilot
+
+* In VS Code, open the Command Palette (**Ctrl+Shift+P**) and run:
+
+  ```
+  GitHub: Sign in
+  ```
+* Follow the prompts to sign in to your GitHub account.
+* Make sure your GitHub account has Copilot access (subscription or free trial).
+
+---
+
+### 7. Open and Run a Notebook
+
+* Create a new file in VS Code with the extension `.ipynb`.
+* When prompted, select your installed Python as the **kernel**.
+* Add and run a simple test cell:
+
+  ```python
+  print("Hello from Python notebook with Copilot!")
+  ```
+* Press **Shift + Enter** to run the cell.
+
+---
+
+### 8. Enable Copilot in Notebooks
+
+If Copilot suggestions don’t appear inside notebook cells:
+
+* Open VS Code settings (**Ctrl+,**).
+* Search for “Copilot” and make sure **Copilot: Enable for Notebooks** is turned on.
+
+or 
+
+* Open a Jupyter notebook (`.ipynb`) in VS Code.
+* Click the **Copilot icon** in the bottom-right status bar.
+* Make sure “Enable Copilot in Notebooks” is turned on.
 ---
 
 ### Copilot Chat
