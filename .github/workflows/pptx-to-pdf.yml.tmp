@@ -1,0 +1,48 @@
+name: Convert Modified PPTX Files to PDF
+on:
+  push:
+    paths:
+      - '**/*.pptx'
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libreoffice
+      - name: Get modified presentations
+        id: get_files
+        run: |
+          git fetch origin main
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+          # Get only PPTX files
+          grep '.pptx$' changed_files.txt > changed_pptx.txt || touch changed_pptx.txt
+          echo "Changed presentations:"
+          cat changed_pptx.txt
+      - name: Convert PPTX to PDF (overwrite existing)
+        run: |
+          while IFS= read -r file; do
+            [ -f "$file" ] && {
+              echo "Converting presentation $file"
+              # Convert to PDF in the same directory as the original file
+              output_dir="$(dirname "$file")"
+              libreoffice --headless --convert-to pdf "$file" --outdir "$output_dir"
+              echo "Converted $file to PDF in $output_dir"
+            }
+          done < changed_pptx.txt
+      - name: Commit and push PDF files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add "*.pdf"
+          if git diff --staged --quiet; then
+            echo "No PDF changes to commit"
+          else
+            git commit -m "Auto-convert PPTX files to PDF [skip ci]"
+            git push
+          fi
