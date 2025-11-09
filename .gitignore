@@ -3,7 +3,7 @@
 desktop.ini
 
 # Ignore all files starting with 'skip_'
-skip_*
+skip*
 
 
 # Byte-compiled / optimized / DLL files
