@@ -2,9 +2,11 @@
 **/beta/
 desktop.ini
 
-# Ignore all files starting with 'skip_'
+# Ignore all files starting with 'skip'
 skip*
 
+# Ignore any folder named 'skip' (at any depth)
+**/skip/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
