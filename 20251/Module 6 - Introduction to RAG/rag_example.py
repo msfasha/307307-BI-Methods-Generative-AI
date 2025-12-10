@@ -1,5 +1,4 @@
-# install streamlit transformers torch
-# pip install streamlit transformers torch
+# pip install sentence_transformers faiss-cpu google-generativeai
 
 from sentence_transformers import SentenceTransformer
 import faiss
@@ -50,7 +49,7 @@ Answer the question using the context below.
 
 # Call a Gemini chat / text model 
 response = client.models.generate_content(
-  model="gemini-1.5-flash", # or "gemini-1.5-pro"
+  model="gemini-2.5-flash", # or "gemini-1.5-pro"
   contents=prompt,
 )
 
