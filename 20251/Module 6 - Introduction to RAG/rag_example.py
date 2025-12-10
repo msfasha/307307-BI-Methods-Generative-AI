@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np

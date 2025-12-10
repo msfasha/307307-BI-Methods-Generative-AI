@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Speech input component for the Streamlit frontend.
 Handles browser-based speech recognition.

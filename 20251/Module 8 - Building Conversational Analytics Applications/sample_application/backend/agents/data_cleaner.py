@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Data Cleaner Agent for handling data cleaning operations.
 This agent identifies and fixes data quality issues.

@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Main Streamlit application for the conversational analytics system.
 This is the entry point for the frontend interface.

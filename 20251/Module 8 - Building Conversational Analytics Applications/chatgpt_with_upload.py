@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 import streamlit as st
 import pandas as pd
 import google.generativeai as genai

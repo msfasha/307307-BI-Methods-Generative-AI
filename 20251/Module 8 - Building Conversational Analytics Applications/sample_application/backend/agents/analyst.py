@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Analyst Agent for performing statistical analysis and generating insights.
 This agent focuses on data analysis and statistical operations.

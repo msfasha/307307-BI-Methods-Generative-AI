@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Code Executor Agent for generating and executing Python code for data analysis.
 This agent creates Python scripts for specific analytical tasks.

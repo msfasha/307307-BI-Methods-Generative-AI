@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Manager Agent for orchestrating the conversational analytics workflow.
 This agent decides which other agents to call based on the user's request.

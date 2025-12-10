@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Session management utilities for the Streamlit frontend.
 Handles session state and data persistence.

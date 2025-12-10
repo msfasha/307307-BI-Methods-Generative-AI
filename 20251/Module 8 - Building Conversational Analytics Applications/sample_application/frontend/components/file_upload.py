@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 File upload component for the Streamlit frontend.
 Handles CSV file upload and validation.

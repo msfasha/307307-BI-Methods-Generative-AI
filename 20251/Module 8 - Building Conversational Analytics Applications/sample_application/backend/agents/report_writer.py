@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Report Writer Agent for generating comprehensive reports from analysis results.
 This agent creates well-formatted, professional reports.

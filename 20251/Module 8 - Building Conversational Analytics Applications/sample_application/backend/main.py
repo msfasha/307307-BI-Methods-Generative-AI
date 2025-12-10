@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Main backend module for the conversational analytics application.
 Orchestrates all agents and handles the analysis workflow.

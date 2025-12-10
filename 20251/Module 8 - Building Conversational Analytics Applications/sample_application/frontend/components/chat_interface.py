@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Chat interface component for the Streamlit frontend.
 Handles the conversation flow and displays analysis results.

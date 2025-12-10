@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Gemini API client for conversational analytics application.
 Handles all interactions with Google's Gemini API.

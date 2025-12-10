@@ -1,3 +1,6 @@
+# install streamlit transformers torch
+# pip install streamlit transformers torch
+
 """
 Data processing utilities for the conversational analytics application.
 Handles CSV file processing, data cleaning, and analysis preparation.
