@@ -1,18 +1,4 @@
-# Minimal Agent + Tool Loop Example
-
-### (Weather Example – Teaching Version)
-
----
-
-## Conceptual Flow (one sentence)
-
-> LLM decides → requests tool → Python executes → LLM continues
-
----
-
-## Full Minimal Code
-
-```python
+# pip install python-dotenv google-genai
 """
 Minimal agent + tool calling loop.
 
@@ -22,14 +8,32 @@ Demonstrates:
 - LLM continuing after receiving the result
 """
 
+import os
 import json
-import google.genai as genai
+import sys
+from dotenv import load_dotenv
+from pathlib import Path
 
-# -----------------------------------
-# Configure Gemini
-# -----------------------------------
-genai.configure(api_key="YOUR_API_KEY")
-model = genai.GenerativeModel("gemini-2.5-flash")
+# Try to import genai with better error handling
+try:
+    from google import genai
+except ImportError as e:
+    print(f"Import error: {e}")
+    print("\nTroubleshooting steps:")
+    print("1. Make sure you're in your virtual environment (venv)")
+    print("2. Run: pip uninstall google-generativeai")
+    print("3. Run: pip install --upgrade google-genai")
+    print("4. Verify: python -c 'from google import genai; print(\"OK\")'")
+    sys.exit(1)
+# Load .env from parent directory
+env_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(env_path)
+
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise RuntimeError("GEMINI_API_KEY is not set")
+
+client = genai.Client(api_key=api_key)
 
 # -----------------------------------
 # Simple external tool (mock weather)
@@ -75,8 +79,11 @@ def agent_step(conversation):
     """
     Send conversation to the model and get response.
     """
-    response = model.generate_content(conversation)
-    return response.text
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=conversation
+    )
+    return response.text or ""
 
 
 # -----------------------------------
@@ -94,6 +101,8 @@ while True:
 
     # Add user message
     conversation += f"\nUser: {user_input}\nAssistant:"
+    print("\nConversation so far:")
+    print(conversation)
 
     # Step 1: Ask the agent
     agent_output = agent_step(conversation)
@@ -128,78 +137,3 @@ while True:
         print(final_response)
 
         conversation += final_response
-```
-
----
-
-## Example Interaction
-
-### User:
-
-```
-What is the weather today in Amman?
-```
-
-### Assistant (LLM decides it does not know):
-
-```json
-{
-  "action": "call_function",
-  "function": "get_weather",
-  "arguments": {
-    "city": "Amman"
-  }
-}
-```
-
-### Python executes:
-
-```python
-get_weather("Amman")
-```
-
-### Tool result:
-
-```
-The weather in Amman is sunny, 25°C.
-```
-
-### Assistant continues:
-
-```
-The weather in Amman today is sunny with a temperature of 25°C.
-```
-
----
-
-## Why this example is **important**
-
-* This is **exactly** how:
-
-  * OpenAI function calling
-  * LangChain agents
-  * AutoGPT-style systems
-  * Production copilots
-    actually work under the hood
-
-* The LLM:
-
-  * **Does not execute code**
-  * **Does not fetch data**
-  * **Requests capabilities**
-
-* Python:
-
-  * Enforces reality
-  * Executes safely
-  * Feeds results back
-
----
-
-## Mental Model (remember this)
-
-```
-LLM = brain
-Tools = hands
-Python = nervous system
-```
