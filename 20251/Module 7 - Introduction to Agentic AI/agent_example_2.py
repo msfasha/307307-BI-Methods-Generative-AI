@@ -1,8 +1,7 @@
-# install streamlit transformers torch
-# pip install streamlit transformers torch
+# pip install pandas google-genai
 
 import pandas as pd
-import google.generativeai as genai
+import google.genai as genai
 import json
 
 # Load dataset
@@ -10,7 +9,7 @@ df = pd.read_csv("sales.csv")   # Example dataset
 
 # Configure Gemini
 genai.configure(api_key="YOUR_API_KEY")
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 # Tools the agent can use
 def summary_tool(_):
