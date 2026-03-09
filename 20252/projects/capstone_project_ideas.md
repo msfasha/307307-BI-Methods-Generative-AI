@@ -1,7 +1,3 @@
-Here are four capstone project ideas tailored for a BI/DA student, ranging in complexity.
-
----
-
 ### 1. The "Natural Language to SQL" Query Generator 🗣️➡️📊
 
 **The Concept:** Build a tool where a business manager can ask a question in plain English, and the application generates the corresponding SQL query to pull that data from a database. This bridges the gap between non-technical users and complex databases.
