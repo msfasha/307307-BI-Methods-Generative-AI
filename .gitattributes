@@ -1,0 +1,25 @@
+# Normalize all text files to LF in the repository.
+# This prevents the CRLF/LF ghost-diff problem when the repo is accessed
+# from both Windows (CRLF) and Linux (LF) e.g. via an SMB share.
+* text=auto eol=lf
+
+# Explicitly mark common source file types as text
+*.py    text eol=lf
+*.ipynb text eol=lf
+*.md    text eol=lf
+*.html  text eol=lf
+*.csv   text eol=lf
+*.txt   text eol=lf
+*.json  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+
+# Binary files — never touch line endings or diff as text
+*.pptx  binary
+*.docx  binary
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.pth   binary
+*.bin   binary
