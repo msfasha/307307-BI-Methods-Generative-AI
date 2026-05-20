@@ -1,4 +1,4 @@
-# pip install sentence_transformers faiss-cpu google-generativeai
+# pip install sentence_transformers faiss-cpu google-genai
 
 from sentence_transformers import SentenceTransformer
 import faiss
