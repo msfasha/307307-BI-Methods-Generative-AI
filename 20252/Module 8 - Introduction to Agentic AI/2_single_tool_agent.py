@@ -25,15 +25,15 @@ except ImportError as e:
     print("3. Run: pip install --upgrade google-genai")
     print("4. Verify: python -c 'from google import genai; print(\"OK\")'")
     sys.exit(1)
+
 # Load .env from parent directory
 env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(env_path)
 
+# api key from environment variable
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
-    raise RuntimeError("GEMINI_API_KEY is not set")
-
-client = genai.Client(api_key=api_key)
+    Client = genai.Client(api_key="my api key")  # Make sure to set your API key in the .env file
 
 # -----------------------------------
 # Simple external tool (mock weather)
@@ -69,6 +69,8 @@ in this format:
   }
 }
 
+make sure to follow the format EXACTLY, otherwise the tool won't be called.
+For example, do no put ```json tags around the JSON, and do not include any extra text.
 If you already have the information, respond normally.
 """
 
@@ -101,20 +103,16 @@ while True:
 
     # Add user message
     conversation += f"\nUser: {user_input}\nAssistant:"
-    print("\nConversation so far:")
-    print(conversation)
 
     # Step 1: Ask the agent
     agent_output = agent_step(conversation)
-    print("\nAssistant raw output:")
-    print(agent_output)
 
     # Step 2: Check if the agent is requesting a function
     try:
         data = json.loads(agent_output)
     except Exception:
         # Normal answer, no tool needed
-        print("\nAssistant:")
+        print("Normal response:")
         print(agent_output)
         conversation += agent_output
         continue
@@ -130,6 +128,7 @@ while True:
             result = "Unknown function."
 
         # Step 4: Send tool result back to the agent
+        conversation += agent_output  # store the tool-call JSON in history
         conversation += f"\nTool result: {result}\nAssistant:"
         final_response = agent_step(conversation)
 
@@ -137,3 +136,6 @@ while True:
         print(final_response)
 
         conversation += final_response
+    
+
+    
