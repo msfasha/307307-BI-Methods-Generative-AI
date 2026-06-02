@@ -11,7 +11,6 @@ Demonstrates:
 import os
 import json
 import sys
-from dotenv import load_dotenv
 from pathlib import Path
 
 # Try to import genai with better error handling
@@ -26,14 +25,13 @@ except ImportError as e:
     print("4. Verify: python -c 'from google import genai; print(\"OK\")'")
     sys.exit(1)
 
-# Load .env from parent directory
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(env_path)
 
 # api key from environment variable
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
-    Client = genai.Client(api_key="my api key")  # Make sure to set your API key in the .env file
+    api_key = "my-api-key-here"  # Make sure to set your API key in the .env file
+
+client = genai.Client(api_key=api_key)
 
 # -----------------------------------
 # Simple external tool (mock weather)
@@ -72,6 +70,8 @@ in this format:
 make sure to follow the format EXACTLY, otherwise the tool won't be called.
 For example, do no put ```json tags around the JSON, and do not include any extra text.
 If you already have the information, respond normally.
+
+Do not restrict yourself to the weather function, if you can generate an answer based on your knowledge then do that.
 """
 
 # -----------------------------------
