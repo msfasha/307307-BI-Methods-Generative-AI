@@ -9,7 +9,7 @@ By the end of this module you should be able to:
 - Explain why LLMs are **stateless** and what that means for an agent.
 - Describe **short-term memory** as the conversation history fed back into the prompt.
 - Explain the **context window** limit and two ways to manage it: **trimming** and **summarization**.
-- Describe **long-term memory** and how **RAG** (retrieval-augmented generation) works at a high level.
+- Describe **long-term memory**, how **RAG** (retrieval-augmented generation) works, and what a **vector database** does.
 - Connect memory to **context engineering** and to reducing **hallucinations**.
 
 ## 1. The problem: LLMs are stateless
@@ -74,7 +74,13 @@ RAG in four steps:
 ![The RAG pipeline: embed, retrieve, augment, generate](img/rag.png)
 *Figure 4-15 — the four steps of retrieval-augmented generation. An Illustrated Guide to AI Agents (O'Reilly, 2026).*
 
-RAG is a major tool for **reducing hallucinations**: by handing the model relevant, trusted facts, it's less likely to make things up. (A more advanced version, **agentic RAG**, lets the agent *decide* what to look up and how often — we'll see that idea again with tools.)
+**Where do the vectors live?** The embeddings are kept in a **vector database**: a database built to store each vector together with its original text (and often *metadata*, such as the source or the date) and to return the stored items most similar to a query vector. For a handful of documents you can simply compare the question with every vector — that is what the lab does. For millions of vectors that becomes slow, so vector databases build an **index** that finds the *approximately* nearest vectors much faster, accepting a small chance of missing a true nearest neighbour. Examples: Chroma, Qdrant, Pinecone, Weaviate, Milvus, and the pgvector extension for PostgreSQL. (FAISS is a similarity-search *library* rather than a full database.)
+
+Two practical points:
+- **Chunking.** Long documents are usually split into smaller **chunks** before embedding, so that each vector stands for one focused piece of text.
+- **Same model.** Embed the documents and the questions with the **same** embedding model; vectors from different models cannot be compared.
+
+RAG is a major tool for **reducing hallucinations**: by handing the model relevant, trusted facts, it's less likely to make things up. (A more advanced version, **agentic RAG**, lets the agent *decide* what to look up and how often — we meet it again in Module 5.)
 
 ## 6. Context engineering (the thread)
 All of this is **context engineering**: giving the model the **right** information for the task, not **all** the information. Memory is where context engineering lives — choose what to keep, what to summarize, and what to retrieve.
@@ -83,13 +89,14 @@ All of this is **context engineering**: giving the model the **right** informati
 - **"The agent remembers."** No — the model is stateless. The memory module **re-sends** the history each call; remembering is an illusion we create.
 - **"Just send the whole history every time."** It eventually overflows the context window and can dilute the model's focus. Manage it (trim/summarize/retrieve).
 - **"RAG makes the model smarter."** RAG adds **relevant facts to the prompt**; it doesn't change the model. Bad retrieval → bad answer.
+- **"RAG always finds the right document."** A vector search returns the *nearest* items even when none of them is relevant. Look at what was retrieved; weak retrieval gives a weak answer.
 - **"More context is always better."** Too much context hurts focus and costs more tokens.
 
 ## 8. Summary
 - LLMs are **stateless**; memory is a module that **re-sends** information.
 - **Short-term memory** = the conversation history (a list of messages).
 - The **context window** is limited → manage it with **trimming** or **summarization**.
-- **Long-term memory** = external knowledge via **RAG** (embed → retrieve → augment → generate).
+- **Long-term memory** = external knowledge via **RAG** (embed → retrieve → augment → generate); the vectors are kept in a **vector database**.
 - It's all **context engineering**, and good memory reduces **hallucinations**.
 
 ## Review Questions
@@ -98,6 +105,7 @@ All of this is **context engineering**: giving the model the **right** informati
 3. What is the context window, and what are two ways to keep a long conversation within it?
 4. List the four steps of RAG and say what "cosine similarity" is used for.
 5. How does giving the model retrieved context help reduce hallucinations?
+6. What does a vector database store, and why must documents and questions be embedded with the same model?
 
 ---
 *Figures in the slides are reproduced from Grootendorst & Alammar, An Illustrated Guide to AI Agents (O'Reilly, 2026), for internal University of Petra classroom use.*
