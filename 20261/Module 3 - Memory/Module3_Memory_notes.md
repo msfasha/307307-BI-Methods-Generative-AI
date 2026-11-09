@@ -60,7 +60,7 @@ So we can't always send the entire history. Two common fixes:
   *Figure 4-10 — trimming keeps only the most recent turns. An Illustrated Guide to AI Agents (O'Reilly, 2026).*
 - **Summarization** — use an LLM to **compress** older turns into a short running summary, kept alongside the recent messages. Saves space while retaining the gist, though repeated summarizing can lose detail.
 
-*Keep the raw conversation in the trajectory* (from Module 2) even when the agent's memory is trimmed or summarized — so you can always see what really happened.
+*Keep the raw conversation in the log* (from Module 2) even when the agent's memory is trimmed or summarized — so you can always see what really happened.
 
 ## 5. Long-term memory and RAG
 When knowledge lives **outside** the conversation — your documents, a knowledge base — we use **long-term memory**, most commonly via **Retrieval-Augmented Generation (RAG)**.

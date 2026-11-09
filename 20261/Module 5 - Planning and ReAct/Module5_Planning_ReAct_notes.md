@@ -69,7 +69,7 @@ That breaks down when **what to search for next depends on what the first search
 | Number of retrievals | Always one | As many as the agent needs (capped by `max_steps`) |
 | Search query | The user's question | Written by the agent, can use earlier observations |
 | Cost and speed | One LLM call | Several LLM calls: slower and more expensive |
-| Predictability | High | Lower; read the trajectory |
+| Predictability | High | Lower; read the log |
 
 Nothing about the ReAct loop changes. The agent is given one more tool (`search_docs`) and a system prompt that describes it.
 
@@ -79,7 +79,7 @@ Nothing about the ReAct loop changes. The agent is given one more tool (`search_
 
 ## 6. Beyond a single agent (course survey)
 You've now built a complete **single** agent. The field goes further — here's the map of what comes next, at a glance:
-- **Evaluation** — agents are hard to judge: look at the **outcome** (did the task get done?) *and* the **trajectory** (were the steps sound?), plus reliability and safety.
+- **Evaluation** — agents are hard to judge: look at the **outcome** (did the task get done?) *and* the **step log** (were the steps sound?), plus reliability and safety.
 - **Multi-agent systems** — several specialised agents collaborate, often coordinated by a **supervisor** agent.
 - **Multimodal agents** — agents that can also **see and hear** (images, audio, video), not just read text.
 - **Coding agents** — agents that **run, test, and fix** real code in a dedicated environment (e.g. the assistants many developers now use).
@@ -89,10 +89,10 @@ These are surveyed briefly to show where the field is heading; the single-agent 
 ## 7. Common Misconceptions
 - **"ReAct is a special model."** No — it's a **loop + a prompt format**. Any capable LLM can do it.
 - **"Planning means one fixed plan."** No — good agents **revise** the plan as they learn (reflection).
-- **"An agent will always finish."** Not guaranteed — that's why we set **`max_steps`** and watch the trajectory.
+- **"An agent will always finish."** Not guaranteed — that's why we set **`max_steps`** and watch the log.
 - **"More steps = better."** Not necessarily; extra loops cost tokens and can wander. Stop when the goal is met.
 - **"Agentic RAG is always better than RAG."** No. If the question is itself a good search query and the answer sits in one or two documents, plain RAG is cheaper, faster and more predictable. Use the agent when later searches depend on earlier results, or when there are several sources to choose from.
-- **"The agent will always search well."** No. It can write a poor query, stop too early, or ignore the results. Check the trajectory.
+- **"The agent will always search well."** No. It can write a poor query, stop too early, or ignore the results. Check the log.
 
 ## 8. Summary
 - **Planning** decomposes a goal into ordered sub-tasks.
