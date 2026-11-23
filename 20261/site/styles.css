@@ -1,0 +1,4 @@
+:root { --petra: #7a1f3d; }
+h1, h2, h3 { color: var(--petra); }
+a { color: var(--petra); }
+.navbar { background-color: var(--petra) !important; }

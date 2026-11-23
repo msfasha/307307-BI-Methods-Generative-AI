@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - "downloads/*.zip"
+    - "module-*/*.pdf"
+    - "module-*/*.ipynb"
+    - "module-*/*.csv"
+    - "module-*/*.txt"
+    - "module-*/support files/**"
+website:
+  title: "307307 GenAI"
+  navbar:
+    left:
+      - text: "Course"
+        href: index.qmd
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-copy: true
+execute:
+  enabled: false
