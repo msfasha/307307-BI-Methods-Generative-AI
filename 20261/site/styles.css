@@ -10,3 +10,9 @@ a { color: var(--petra); }
 /* sidebar / table of contents links */
 .sidebar nav a, #TOC a { color: #333; }
 #TOC a.active, .sidebar nav a.active { color: var(--petra) !important; font-weight: 600; }
+/* search icon, toggler and any other navbar icon: white too */
+.navbar #quarto-search .aa-DetachedSearchButtonIcon, .navbar #quarto-search svg,
+.navbar .aa-DetachedSearchButton, .navbar .aa-DetachedSearchButtonIcon,
+.navbar .bi, .navbar .navbar-toggler { color: #fff !important; }
+.navbar .aa-DetachedSearchButtonIcon svg, .navbar #quarto-search svg { fill: #fff !important; stroke: #fff; }
+.navbar .navbar-toggler-icon { filter: invert(1); }

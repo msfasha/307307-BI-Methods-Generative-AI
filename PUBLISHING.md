@@ -47,7 +47,7 @@ Code Agents) live under Module 6 `extended/`.
 ## Theme (keep this)
 
 Petra burgundy `#7a1f3d` on Quarto's `cosmo` theme: headings and links burgundy, navbar burgundy
-with **white** links. All of it is in `20261/site/styles.css`. Layout: homepage lists modules under
+with **white** links, search icon included. All of it is in `20261/site/styles.css`. Layout: homepage lists modules under
 "Agentic AI" and "AI Governance", then Downloads (labs zip, PDFs zip, GitHub link); each module has
 its own page of links.
 
