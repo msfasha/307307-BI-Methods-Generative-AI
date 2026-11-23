@@ -37,7 +37,7 @@ Files are found by name suffix, so keep these names:
 | `*_notes.pdf`, `*_slides.pdf`, `*_activity.pdf` | PDF links and the PDF zip |
 | `*.ipynb` | Lab (HTML) and notebook download |
 | `*.csv`, `*.txt`, `support files/` | Lab data, included in the notebooks zip |
-| `extended/*.pdf` | "Extended lecture notes (PDF): name - (optional)" links (not in the PDF zip, they are large) |
+| `extended/*.pdf` | "Extended lecture notes: name (PDF) - (optional)" links (whole text is the link) (not in the PDF zip, they are large) |
 
 PPTX/DOCX are gitignored, so they never reach the site. Folders starting with `skip_` are ignored.
 To add or rename a module, edit the `MODULES` list at the top of `build.py`.
@@ -62,3 +62,9 @@ its own page of links.
 ## Before you publish
 
 Notebooks and notes become public. Check for API keys first (placeholders like `YOUR_GEMINI_API_KEY` are fine).
+
+## Module page layout
+
+One line per item; several formats of the same item are listed side by side, not as separate lines:
+`Lecture notes: HTML · PDF`, `Lab: HTML · Notebook (.ipynb)`, `Slides: PDF`, `Activity: PDF`.
+Extended lectures are one linked line each: `Extended lecture notes: <name> (PDF) - (optional)`.

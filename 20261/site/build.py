@@ -45,7 +45,8 @@ def main():
         s = SRC / folder
         d = STAGE / slug
         d.mkdir()
-        links = []   # (label, href)
+        links = {}   # label -> [(format text, href)]; same item in several formats is listed on one line
+        add = lambda label, fmt, href: links.setdefault(label, []).append((fmt, href))
         notes = find(s, "_notes.md")
         if notes:
             shutil.copy(notes[0], d / "notes.md")
@@ -56,25 +57,26 @@ def main():
             (d / "notes.md").unlink()
             if (s / "img").is_dir():
                 shutil.copytree(s / "img", d / "img")
-            links.append(("Lecture notes (HTML)", "notes.html"))
-        for kind, suffix in (("Lecture notes (PDF)", "_notes.pdf"), ("Slides (PDF)", "_slides.pdf"),
-                             ("Activity (PDF)", "_activity.pdf")):
+            add("Lecture notes", "HTML", "notes.html")
+        for kind, suffix in (("Lecture notes", "_notes.pdf"), ("Slides", "_slides.pdf"),
+                             ("Activity", "_activity.pdf")):
             for p in find(s, suffix):
                 shutil.copy(p, d / p.name)
-                links.append((kind, p.name))
+                add(kind, "PDF", p.name)
                 pdf_bundle.append((p, f"{slug}/{p.name}"))
         # extended lecture slides (module/extended/*.pdf) -> own links, kept out of the PDF zip (large)
         for p in sorted((s / "extended").glob("*.pdf")) if (s / "extended").is_dir() else []:
             (d / "extended").mkdir(exist_ok=True)
             shutil.copy(p, d / "extended" / p.name)
-            links.append((f"Extended lecture notes (PDF): {p.stem} - (optional)", f"extended/{p.name}"))
+            add(f"Extended lecture notes: {p.stem.replace('_', ' ')}", "PDF", f"extended/{p.name}")
         for p in sorted(s.glob("*.ipynb")):
             shutil.copy(p, d / p.name)
             nbq = p.name
-            links.append((f"{p.stem} - Lab (HTML)", p.stem + ".html"))
+            lab = "Lab" if len(list(s.glob("*.ipynb"))) == 1 else f"Lab: {p.stem.replace('_', ' ')}"
+            add(lab, "HTML", p.stem + ".html")
             (STAGE / "_dl" / slug).mkdir(parents=True, exist_ok=True)
             shutil.copy(p, STAGE / "_dl" / slug / p.name)   # '_dl' is not rendered, so quarto leaves the link alone
-            links.append((f"{p.stem} - Lab notebook (.ipynb)", f"../_dl/{slug}/{p.name}"))
+            add(lab, "Notebook (.ipynb)", f"../_dl/{slug}/{p.name}")
             nb_bundle.append((p, f"{slug}/{p.name}"))
         # lab data / support files
         extra = [p for p in s.iterdir() if p.is_file() and p.suffix in (".csv", ".txt")]
@@ -90,7 +92,11 @@ def main():
 
     # homepage + per-module pages
     def mod_page(slug, title, part, links):
-        rows = "\n".join(f"- [{l}]({quote(h)})" for l, h in links)
+        def row(label, fmts):
+            if label.startswith("Extended"):          # single format: the whole line is the link
+                return f"- [{label} (PDF) - (optional)]({quote(fmts[0][1])})"
+            return f"- {label}: " + " · ".join(f"[{f}]({quote(h)})" for f, h in fmts)
+        rows = "\n".join(row(l, f) for l, f in links.items())
         (STAGE / slug / "index.qmd").write_text(
             f'---\ntitle: "{title}"\n---\n\n{rows}\n', encoding="utf-8")
     sections = {}
