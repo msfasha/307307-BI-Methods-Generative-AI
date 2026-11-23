@@ -1,0 +1,61 @@
+month,product,units,price,unit_cost
+Jan,Espresso,900,2.5,0.6
+Jan,Latte,700,4.0,1.1
+Jan,Hot Tea,400,3.0,0.5
+Jan,Iced Latte,175,4.5,1.2
+Jan,Pastry,600,3.5,1.4
+Feb,Espresso,900,2.5,0.6
+Feb,Latte,700,4.0,1.1
+Feb,Hot Tea,400,3.0,0.5
+Feb,Iced Latte,188,4.5,1.2
+Feb,Pastry,600,3.5,1.4
+Mar,Espresso,900,2.5,0.6
+Mar,Latte,700,4.0,1.1
+Mar,Hot Tea,400,3.0,0.5
+Mar,Iced Latte,225,4.5,1.2
+Mar,Pastry,600,3.5,1.4
+Apr,Espresso,900,2.5,0.6
+Apr,Latte,700,4.0,1.1
+Apr,Hot Tea,400,3.0,0.5
+Apr,Iced Latte,250,4.5,1.2
+Apr,Pastry,600,3.5,1.4
+May,Espresso,900,2.5,0.6
+May,Latte,700,4.0,1.1
+May,Hot Tea,400,3.0,0.5
+May,Iced Latte,300,4.5,1.2
+May,Pastry,600,3.5,1.4
+Jun,Espresso,900,2.5,0.6
+Jun,Latte,700,4.0,1.1
+Jun,Hot Tea,400,3.0,0.5
+Jun,Iced Latte,375,4.5,1.2
+Jun,Pastry,600,3.5,1.4
+Jul,Espresso,900,2.5,0.6
+Jul,Latte,700,4.0,1.1
+Jul,Hot Tea,400,3.0,0.5
+Jul,Iced Latte,425,4.5,1.2
+Jul,Pastry,600,3.5,1.4
+Aug,Espresso,900,2.5,0.6
+Aug,Latte,700,4.0,1.1
+Aug,Hot Tea,400,3.0,0.5
+Aug,Iced Latte,400,4.5,1.2
+Aug,Pastry,600,3.5,1.4
+Sep,Espresso,900,2.5,0.6
+Sep,Latte,700,4.0,1.1
+Sep,Hot Tea,400,3.0,0.5
+Sep,Iced Latte,300,4.5,1.2
+Sep,Pastry,600,3.5,1.4
+Oct,Espresso,900,2.5,0.6
+Oct,Latte,700,4.0,1.1
+Oct,Hot Tea,400,3.0,0.5
+Oct,Iced Latte,250,4.5,1.2
+Oct,Pastry,600,3.5,1.4
+Nov,Espresso,900,2.5,0.6
+Nov,Latte,700,4.0,1.1
+Nov,Hot Tea,400,3.0,0.5
+Nov,Iced Latte,200,4.5,1.2
+Nov,Pastry,600,3.5,1.4
+Dec,Espresso,900,2.5,0.6
+Dec,Latte,700,4.0,1.1
+Dec,Hot Tea,400,3.0,0.5
+Dec,Iced Latte,175,4.5,1.2
+Dec,Pastry,600,3.5,1.4

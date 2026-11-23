@@ -1,0 +1,19 @@
+PETRA BEAN - MARKET NOTES (fictional teaching data)
+
+Neighbourhood survey, 200 regular customers:
+- 38% say they would try bottled cold brew.
+- 62% of those would pay up to 4.50 per 330 ml bottle.
+- Top reasons to buy: convenience (54%), taste (31%), caffeine kick (15%).
+
+Competitors:
+- Supermarket cold brew: 3.20 per bottle, average quality.
+- Specialty cafe across town: 5.00 per bottle, very good quality.
+
+Costs and supplier quotes:
+- Bottling equipment (one-off): 1,800.
+- Ingredients and bottle per unit: 1.10.
+- Recyclable glass bottles available from a local supplier; plastic is cheaper but not allowed by shop policy.
+- Cold brew keeps for 7 days in the fridge.
+
+Trend:
+- Searches for "cold brew" in our city rose 22% over the last 12 months.
