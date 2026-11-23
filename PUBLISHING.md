@@ -37,7 +37,7 @@ Files are found by name suffix, so keep these names:
 | `*_notes.pdf`, `*_slides.pdf`, `*_activity.pdf` | PDF links and the PDF zip |
 | `*.ipynb` | Lab (HTML) and notebook download |
 | `*.csv`, `*.txt`, `support files/` | Lab data, included in the notebooks zip |
-| `extended/*.pdf` | "Extended lecture notes (PDF)" links (not in the PDF zip, they are large) |
+| `extended/*.pdf` | "Extended lecture notes (PDF): name - (optional)" links (not in the PDF zip, they are large) |
 
 PPTX/DOCX are gitignored, so they never reach the site. Folders starting with `skip_` are ignored.
 To add or rename a module, edit the `MODULES` list at the top of `build.py`.

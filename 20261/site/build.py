@@ -87,7 +87,7 @@ def main():
 
     # homepage + per-module pages
     def mod_page(slug, title, part, links):
-        rows = "\n".join(f"- [{l}]({h})" for l, h in links)
+        rows = "\n".join(f"- [{l}]({h})" + (" - (optional)" if l.startswith("Extended") else "") for l, h in links)
         (STAGE / slug / "index.qmd").write_text(
             f'---\ntitle: "{title}"\n---\n\n{rows}\n', encoding="utf-8")
     sections = {}
