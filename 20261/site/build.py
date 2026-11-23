@@ -4,6 +4,7 @@
 Run from anywhere:  python3 20261/site/build.py
 Output: 20261/_build/site/   (never modifies the teaching sources)
 """
+from urllib.parse import quote
 import re, shutil, subprocess, sys, zipfile
 from pathlib import Path
 
@@ -70,8 +71,10 @@ def main():
         for p in sorted(s.glob("*.ipynb")):
             shutil.copy(p, d / p.name)
             nbq = p.name
-            links.append(("Lab (HTML)", p.stem + ".html"))
-            links.append(("Lab notebook (.ipynb)", nbq))
+            links.append((f"{p.stem} - Lab (HTML)", p.stem + ".html"))
+            (STAGE / "_dl" / slug).mkdir(parents=True, exist_ok=True)
+            shutil.copy(p, STAGE / "_dl" / slug / p.name)   # '_dl' is not rendered, so quarto leaves the link alone
+            links.append((f"{p.stem} - Lab notebook (.ipynb)", f"../_dl/{slug}/{p.name}"))
             nb_bundle.append((p, f"{slug}/{p.name}"))
         # lab data / support files
         extra = [p for p in s.iterdir() if p.is_file() and p.suffix in (".csv", ".txt")]
@@ -87,7 +90,7 @@ def main():
 
     # homepage + per-module pages
     def mod_page(slug, title, part, links):
-        rows = "\n".join(f"- [{l}]({h})" for l, h in links)
+        rows = "\n".join(f"- [{l}]({quote(h)})" for l, h in links)
         (STAGE / slug / "index.qmd").write_text(
             f'---\ntitle: "{title}"\n---\n\n{rows}\n', encoding="utf-8")
     sections = {}

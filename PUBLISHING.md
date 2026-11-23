@@ -44,6 +44,9 @@ To add or rename a module, edit the `MODULES` list at the top of `build.py`.
 Extended slides for modules without a natural match (Evaluating Agents, Multi-Agent, Multi-Modal,
 Code Agents) live under Module 6 `extended/`.
 
+Notebook downloads are staged under `_dl/` on purpose: Quarto rewrites any link to a rendered `.ipynb` into its
+`.html`, so the raw copies live in a folder it does not render.
+
 ## Theme (keep this)
 
 This look is now the shared theme for all courses. The full spec is `petra_theme/petra_theme.md`

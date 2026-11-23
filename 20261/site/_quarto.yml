@@ -9,6 +9,7 @@ project:
     - "module-*/*.csv"
     - "module-*/*.txt"
     - "module-*/support files/**"
+    - "_dl/**"
 website:
   title: "307307 GenAI"
   navbar:
