@@ -13,6 +13,18 @@ Only the current semester folder (`20261/`) is published. Older semesters are no
 - Quarto is only a Markdown/notebook-to-HTML converter here. No R is used and no code is executed
   (`execute: enabled: false`), so labs show saved outputs only.
 
+## README link (keep this)
+
+The top of the repository `README.md` must keep a link that opens the course website, right under the title,
+as in the Applied Statistics repo:
+
+```md
+[Open the student course website](https://msfasha.github.io/307307-BI-Methods-Generative-AI/) (current semester, 20261).
+```
+
+When starting a new semester, update this link text and the `SRC`/paths in `20261/site/build.py` and the workflow.
+Also set the repository "Website" field (the gear next to About on the repo home page) to the same URL.
+
 Preview locally: `python3 20261/site/build.py`, then open `20261/_build/site/index.html`.
 
 ## What each module folder must contain
