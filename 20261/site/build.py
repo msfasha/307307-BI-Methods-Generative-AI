@@ -99,12 +99,18 @@ def main():
     def mod_page(slug, title, part, links):
         def row(label, fmts):
             if label.startswith("Extended"):          # single format: the whole line is the link
-                return f"- [{label} (PDF) - (optional)]({quote(fmts[0][1], safe=":/")})"
-            return f"- {label}: " + " · ".join(f"[{f}]({quote(h, safe=":/")})" for f, h in fmts)
-        # optional material (extended notes) goes after everything else; sort is stable
-        rows = "\n".join(row(l, f) for l, f in sorted(links.items(), key=lambda kv: kv[0].startswith("Extended")))
+                name = label.split(": ", 1)[1]
+                return f"- [{name} (PDF)]({quote(fmts[0][1], safe=':/')})"
+            return f"- {label}: " + " · ".join(f"[{f}]({quote(h, safe=':/')})" for f, h in fmts)
+        main = [row(l, f) for l, f in links.items() if not l.startswith("Extended")]
+        extended = [row(l, f) for l, f in links.items() if l.startswith("Extended")]
+        body = "\n".join(main) + "\n"
+        if extended:   # optional material is set apart so students do not confuse it with the formal material
+            body += ("\n---\n\n## Optional: extended lecture notes\n\n"
+                     "*Extra reading for those who want to go deeper. Not required for the course.*\n\n"
+                     + "\n".join(extended) + "\n")
         (STAGE / slug / "index.qmd").write_text(
-            f'---\ntitle: "{title}"\n---\n\n{rows}\n', encoding="utf-8")
+            f'---\ntitle: "{title}"\n---\n\n{body}', encoding="utf-8")
     sections = {}
     for slug, (title, part, links) in cards.items():
         mod_page(slug, title, part, links)
