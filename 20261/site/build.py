@@ -5,7 +5,7 @@ Run from anywhere:  python3 20261/site/build.py
 Output: 20261/_build/site/   (never modifies the teaching sources)
 """
 from urllib.parse import quote
-import re, shutil, subprocess, sys, zipfile
+import json, re, shutil, subprocess, sys, zipfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -29,6 +29,12 @@ MODULES = [
     ("module-10", "Module 10 - AI Impact and Risk Assessment", "AI Impact and Risk Assessment", "AI Governance"),
     ("module-11", "Module 11 - Lifecycle, Incidents and Audit", "Lifecycle, Incidents and Audit", "AI Governance"),
 ]
+
+def stage_for_html(src, dst):
+    """Copy a notebook for rendering, dropping the 'Open in Colab' badge cell (raw HTML shows as code on the site)."""
+    nb = json.loads(src.read_text(encoding="utf-8"))
+    nb["cells"] = [c for c in nb["cells"] if "colab-badge.svg" not in "".join(c.get("source", []))]
+    dst.write_text(json.dumps(nb, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 def find(folder, suffix):
     return sorted(p for p in folder.iterdir() if p.is_file() and p.name.endswith(suffix)
@@ -70,13 +76,12 @@ def main():
             shutil.copy(p, d / "extended" / p.name)
             add(f"Extended lecture notes: {p.stem.replace('_', ' ')}", "PDF", f"extended/{p.name}")
         for p in sorted(s.glob("*.ipynb")):
-            shutil.copy(p, d / p.name)
+            stage_for_html(p, d / p.name)   # rendered copy has no Colab badge; the download copy keeps it
             nbq = p.name
             lab = "Lab" if len(list(s.glob("*.ipynb"))) == 1 else f"Lab: {p.stem.replace('_', ' ')}"
             add(lab, "HTML", p.stem + ".html")
-            (STAGE / "_dl" / slug).mkdir(parents=True, exist_ok=True)
-            shutil.copy(p, STAGE / "_dl" / slug / p.name)   # '_dl' is not rendered, so quarto leaves the link alone
-            add(lab, "Notebook (.ipynb)", f"../_dl/{slug}/{p.name}")
+            # browsers show a raw .ipynb as JSON text, so link to GitHub, which renders notebooks
+            add(lab, "Notebook (.ipynb)", f"{REPO_URL}/blob/main/{SRC.name}/{folder}/{p.name}")
             nb_bundle.append((p, f"{slug}/{p.name}"))
         # lab data / support files
         extra = [p for p in s.iterdir() if p.is_file() and p.suffix in (".csv", ".txt")]
@@ -94,8 +99,8 @@ def main():
     def mod_page(slug, title, part, links):
         def row(label, fmts):
             if label.startswith("Extended"):          # single format: the whole line is the link
-                return f"- [{label} (PDF) - (optional)]({quote(fmts[0][1])})"
-            return f"- {label}: " + " · ".join(f"[{f}]({quote(h)})" for f, h in fmts)
+                return f"- [{label} (PDF) - (optional)]({quote(fmts[0][1], safe=":/")})"
+            return f"- {label}: " + " · ".join(f"[{f}]({quote(h, safe=":/")})" for f, h in fmts)
         # optional material (extended notes) goes after everything else; sort is stable
         rows = "\n".join(row(l, f) for l, f in sorted(links.items(), key=lambda kv: kv[0].startswith("Extended")))
         (STAGE / slug / "index.qmd").write_text(
