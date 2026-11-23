@@ -71,84 +71,102 @@ A good engineer knows when *not* to use a tool:
 
 ## The ladder at a glance
 
-| Level | New idea | Component | Lab step |
-|---|---|---|---|
-| 0 | An agent is an LLM + persona + (optional) tools + a loop | `Agent` | Step 1 |
-| 1 | A job with a definition of "done" | `Task`, `Crew` | Step 1 |
-| 2 | Several agents passing work along | `Process.sequential`, `context`, `{inputs}` | Step 4 |
-| 3 | Let agents *act* | `@tool` | Step 3 |
-| 4 | Make output usable by code | `output_pydantic` | Step 2 |
-| 5 | You control the order | `Flow`, `@start`, `@listen`, `@router` | Step 9 |
-| 6 | Flow as the skeleton, Crews as the brains | Flow + Crew | Step 9 |
+Each level adds **one** idea. The code in the notes is **the same code as in the *CrewAI Basics* lab** (Parts 1 to 7), so you can read here and run there.
 
-Each code block below is short and self-contained. The lab then applies the same ideas to one running example (the fictional *Petra Bean* coffee shop).
+| Level | New idea | Component | Basics lab part | Long lab step |
+|---|---|---|---|---|
+| 0 | An agent is an LLM + persona (+ tools) + a loop | `Agent` | Part 1 | Step 1 |
+| 1 | A job with a definition of "done" | `Task`, `Crew` | Part 2 | Step 1 |
+| 2 | Several agents passing work along | `Process.sequential`, `context`, `{inputs}` | Part 3 | Step 4 |
+| 3 | Let agents *act* | `@tool` | Part 4 | Step 3 |
+| 4 | Make output usable by code | `output_pydantic` | Part 5 | Step 2 |
+| 5 | You control the order | `Flow`, `@start`, `@listen`, `@router` | Part 6 | Step 9 |
+| 6 | Flow as the skeleton, Crews as the brains | Flow + Crew | Part 7 | Step 9 |
 
 ## Setup
 ```bash
-pip install 'crewai[tools,google-genai]'     # the lab uses Gemini; use [openai] or [anthropic] for those
+pip install 'crewai[google-genai]'     # the labs use Gemini; use [openai] or [anthropic] for those
 export GOOGLE_API_KEY=...
 ```
 The extra in the brackets installs the provider you choose. Without it CrewAI raises an import error when it first calls the model.
 
-## Level 0 — What is an "agent"?
+```python
+from crewai import Agent, Task, Crew, Process, LLM
+llm = LLM(model="gemini/gemini-3.6-flash")   # "gemini/" selects Google Gemini
+```
+
+## Level 0 — What is an "agent"? (Basics Part 1)
 An agent is an LLM with three things attached:
-- a **role / goal / backstory** — a persona written into its system prompt (think: a job description);
+- a **role / goal / backstory**: a persona written into its system prompt (a job description);
 - optional **tools** it can call (Level 3);
-- a **loop** — it thinks, calls a tool if needed, reads the result, and repeats until it can answer. This is the THOUGHT → ACTION → OBSERVATION loop from Module 4, written for you.
+- a **loop**: think, call a tool if needed, read the result, repeat until it can answer (the THOUGHT, ACTION, OBSERVATION loop of Module 4, written for you).
 
 ```python
-from crewai import Agent, LLM
-
-llm = LLM(model="gemini/gemini-3.6-flash")
-
-analyst = Agent(
-    role="Market Analyst",
-    goal="Give short, accurate answers about markets",
-    backstory="You are a careful analyst who admits uncertainty.",
+guide = Agent(
+    role="Student Travel Guide",
+    goal="Give short, practical travel advice to students on a small budget",
+    backstory="You have backpacked across 40 countries and you always think about cost first.",
     llm=llm,
 )
 
-result = analyst.kickoff("What is a P/E ratio?")
-print(result.raw)
+answer = guide.kickoff("I have 2 days in Amman. What should I see?")
+print(answer.raw)
 ```
 `kickoff()` runs the agent once. No Task or Crew is needed yet. If you only need one agent answering questions, you can stop here.
 
-## Level 1 — Task and Crew (one agent, one job)
-A **Task** is a specific piece of work. Unlike a chat message it has an **`expected_output`**, which tells the agent what "done" looks like. A **Crew** is the container that runs tasks.
+## Level 1 — Task and Crew (Basics Part 2)
+A **Task** is a specific piece of work with an **`expected_output`** that says what "done" looks like. A **Crew** is the container that runs tasks.
 
 ```python
-from crewai import Agent, Task, Crew
-
-writer = Agent(role="Explainer", goal="Explain topics simply",
-               backstory="You teach beginners.", llm=llm)
-
 explain = Task(
     description="Explain what an API is to a 12-year-old.",
-    expected_output="Exactly 3 sentences, with one analogy.",
-    agent=writer,
+    expected_output="Exactly 3 sentences, including one everyday analogy.",
+    agent=guide,
 )
 
-crew = Crew(agents=[writer], tasks=[explain])
-print(crew.kickoff().raw)
+crew = Crew(agents=[guide], tasks=[explain])
+result = crew.kickoff()
+print(result.raw)
 ```
-**Try it:** change `expected_output` and watch the answer change. It is the single biggest lever you have.
+**Try it:** change `expected_output` and watch the answer change. It is your strongest lever.
 
 | Component | Answers the question |
 |---|---|
 | **Agent** | *Who* is doing the work? |
-| **Task** | *What* exactly must be done, and what does a good result look like? |
+| **Task** | *What* exactly, and what does a good result look like? |
 | **Crew** | *Which* agents and tasks, and *how* do they run together? |
 
-## Level 2 — Two agents passing work along
-By default a crew runs its tasks one after another (`Process.sequential`), like an assembly line. Earlier outputs are passed along to later tasks, and `context` lets you say explicitly which ones.
+Look inside what `kickoff()` returns:
+```python
+# kickoff returns a result object. Look inside it (this reuses `result` from the cell above).
+print("Type of result:", type(result).__name__)
+print("--- result.raw (the final answer as text) ---")
+print(result.raw)
+print("--- result.tasks_output (one entry per task) ---")
+for t in result.tasks_output:
+    print("*", t.description, "->", t.raw[:80], "...")
+print("--- result.token_usage (how much text was consumed) ---")
+print(result.token_usage)
+```
+
+## Level 2 — Several agents passing work along (Basics Part 3)
+A crew runs its tasks one after another (`Process.sequential`), like an assembly line. Earlier outputs are passed along, and `context` says explicitly which ones.
+- **`{topic}`** is a placeholder; its value comes from `inputs={...}` at kickoff, so one crew serves any topic.
+- **`context=[research]`** says the writer receives the researcher's output.
 
 ```python
-from crewai import Process
-
-researcher = Agent(role="Researcher", goal="List accurate facts",
-                   backstory="Thorough and skeptical.", llm=llm)
-writer = Agent(role="Writer", goal="Write crisp summaries",
-               backstory="Writes for busy executives.", llm=llm)
+researcher = Agent(
+    role="Researcher",
+    goal="List accurate, relevant facts",
+    backstory="Thorough and sceptical. You never invent facts.",
+    llm=llm,
+)
+writer = Agent(
+    role="Writer",
+    goal="Write crisp summaries for busy managers",
+    backstory="You write short, clear business prose.",
+    llm=llm,
+)
 
 research = Task(
     description="List 5 facts about {topic}.",
@@ -156,65 +174,80 @@ research = Task(
     agent=researcher,
 )
 write = Task(
-    description="Turn the facts into a 50-word summary.",
-    expected_output="One paragraph, max 50 words.",
+    description="Turn the facts into a summary for a manager.",
+    expected_output="One paragraph of at most 50 words.",
     agent=writer,
-    context=[research],            # the writer receives the researcher's output
+    context=[research],        # the writer receives the researcher's output
 )
 
-crew = Crew(agents=[researcher, writer], tasks=[research, write],
-            process=Process.sequential)
-print(crew.kickoff(inputs={"topic": "solar power"}).raw)
-```
-Two new ideas:
-- **`{topic}`** is a placeholder. Its value comes from `inputs={...}` at kickoff, so one crew can be reused for any topic.
-- **`context=[research]`** says the writer receives the researcher's output.
+team = Crew(agents=[researcher, writer], tasks=[research, write], process=Process.sequential)
 
-## Level 3 — Tools (let agents act)
-A **tool** is a Python function the agent may decide to call. The agent never sees your code: it sees the tool's **name, type hints and docstring**. That text is how it decides *whether* and *how* to use the tool.
+print(team.kickoff(inputs={"topic": "solar power in Jordan"}).raw)
+```
+
+## Level 3 — Tools (Basics Part 4)
+A **tool** is a Python function the agent may decide to call. The agent never sees your code: it sees the tool's **name, type hints and docstring**. That text is how it decides *whether* and *how* to use the tool (details in the reference section below).
 
 ```python
 from crewai.tools import tool
 
-@tool("Word counter")
-def word_count(text: str) -> str:
-    """Count the number of words in the given text."""
-    return str(len(text.split()))
+@tool("Add VAT")
+def add_vat(price: float, vat_percent: float) -> str:
+    """Calculate the final price after adding VAT (sales tax).
+    Inputs: the price before tax, and the VAT rate as a percentage (for example 16 for 16%).
+    Returns the price including VAT, rounded to 2 decimals."""
+    return str(round(price * (1 + vat_percent / 100), 2))
 
-editor = Agent(role="Editor", goal="Enforce length limits",
-               backstory="Strict about word counts.",
-               tools=[word_count], llm=llm)
+# You can test a tool directly, with no AI involved:
+print(add_vat.run(price=80, vat_percent=16))
 ```
-If an agent misuses a tool, a vague docstring is the usual cause (see *Why the docstring matters* in the reference section below). You can test a tool without any LLM: `word_count.run(text="one two three")` returns `"3"`. CrewAI also ships ready-made tools in `crewai_tools` (web search, file reading, scraping).
-
-This is the *intent vs action* idea from Module 4: the model only *asks* for the tool; CrewAI runs it and hands the result back.
-
-## Level 4 — Structured output
-Free text is hard to use in code. Make the task return a typed object instead:
-
+Give it to an agent (the only change is `tools=[...]`):
 ```python
-from pydantic import BaseModel
-
-class Brief(BaseModel):
-    title: str
-    bullets: list[str]
-
-write = Task(
-    description="Summarize solar power.",
-    expected_output="A title and 3 bullets.",
-    agent=writer,
-    output_pydantic=Brief,
+shopper = Agent(
+    role="Shopping Assistant",
+    goal="Answer price questions exactly, never guessing a number you can calculate",
+    backstory="You help customers understand what they will really pay.",
+    tools=[add_vat],
+    llm=llm,
+    verbose=True,
 )
 
-result = Crew(agents=[writer], tasks=[write]).kickoff()
-print(result.pydantic.title)       # a real Python object, not a paragraph
+price_task = Task(
+    description="A laptop costs 849.50 before tax. VAT is 16%. What is the final price?",
+    expected_output="One sentence stating the final price.",
+    agent=shopper,
+)
+
+print(Crew(agents=[shopper], tasks=[price_task]).kickoff().raw)
 ```
-Use this whenever a later step (an `if`, a database, a chart) needs a specific field such as a verdict.
+This is the *intent vs action* idea from Module 4: the model only *asks* for the tool; CrewAI runs it and hands the result back.
 
-## Level 5 — Flows: `@start`, `@listen`, `@router`
-Crews are good when you want agents to *figure things out*. Sometimes you want to control the order yourself: do this, then that, and *if* X then do Y. That is a **Flow**.
+## Level 4 — Structured output (Basics Part 5)
+Free text is hard to use in code. Make the task return a typed object instead, so a later `if`, database or chart can read a field:
 
-A Flow is an ordinary Python class where **each method is a step**. Decorators say *when* a step runs:
+```python
+from typing import List, Literal
+from pydantic import BaseModel
+
+class TripVerdict(BaseModel):
+    worth_it: Literal["yes", "maybe", "no"]    # only these three values are allowed
+    reasons: List[str]
+
+verdict_task = Task(
+    description="A student asks: is a 1-day trip from Amman to Petra worth the cost?",
+    expected_output="A verdict (yes, maybe or no) and 2 to 3 short reasons.",
+    agent=guide,
+    output_pydantic=TripVerdict,
+)
+
+out = Crew(agents=[guide], tasks=[verdict_task]).kickoff()
+
+print(out.pydantic.worth_it)       # a real Python value, usable in an if-statement
+print(out.pydantic.reasons)
+```
+
+## Level 5 — Flows: `@start`, `@listen`, `@router` (Basics Part 6)
+Crews are good when agents should *figure things out*. When **you** want to control the order (do this, then that, and *if* X then Y), use a **Flow**: a normal Python class where **each method is a step**.
 
 | Decorator | Meaning |
 |---|---|
@@ -223,91 +256,115 @@ A Flow is an ordinary Python class where **each method is a step**. Decorators s
 | `@router(step)` | "Run after `step`, then **choose a path** by returning a text label." |
 | `@listen("label")` | "Run when a router returns this label." |
 
-Think of dominoes: `@start` tips the first one and `@listen` says which domino falls after which. `self.state` is memory shared by all steps. Here is a Flow with **no AI in it**, so you see only the mechanics:
+Think of dominoes: `@start` tips the first one and `@listen` says which falls next. `self.state` is memory shared by all steps. This flow has **no AI in it**, so you see only the mechanics:
 
 ```python
 from crewai.flow.flow import Flow, start, listen, router
 from pydantic import BaseModel
 
-class S(BaseModel):
-    n: int = 0
+class OrderState(BaseModel):
+    amount: float = 0
 
-class Demo(Flow[S]):
+class OrderFlow(Flow[OrderState]):
+
     @start()
-    def begin(self):
-        print("1. begin")
-        self.state.n = 7                  # shared memory for the whole flow
-        return "from-begin"
+    def receive_order(self):
+        print("1. order received")
+        self.state.amount = 250          # shared memory for the whole flow
+        return "order-17"
 
-    @listen(begin)
-    def second(self, prev):               # prev = begin's return value
-        print("2. second got:", prev)
-        return "from-second"
+    @listen(receive_order)
+    def log_order(self, order_id):       # gets receive_order's return value
+        print("2. logging", order_id, "amount =", self.state.amount)
 
-    @listen(second)
-    def third(self, prev):
-        print("3. third got:", prev, "state.n =", self.state.n)
+    @router(receive_order)
+    def check_amount(self):
+        return "needs_approval" if self.state.amount > 100 else "auto_approve"
 
-    @router(second)                       # chooses a path by returning a label
-    def decide(self):
-        return "big" if self.state.n > 5 else "small"
+    @listen("needs_approval")
+    def ask_manager(self):
+        print("3. amount is large, a manager must approve")
 
-    @listen("big")                        # listens to a label, not a method
-    def on_big(self):
-        print("4. router chose BIG")
+    @listen("auto_approve")
+    def approve(self):
+        print("3. small amount, approved automatically")
 
-    @listen("small")
-    def on_small(self):
-        print("4. router chose SMALL")
-
-Demo().kickoff()
+OrderFlow().kickoff()
 ```
 Output:
 ```
-1. begin
-2. second got: from-begin
-3. third got: from-second state.n = 7
-4. router chose BIG
+1. order received
+2. logging order-17 amount = 250
+3. amount is large, a manager must approve
 ```
-How to read it: `begin` runs first (`@start`). `second` runs after it and receives `"from-begin"`. `third` runs after `second`. The router also runs after `second`; it returns `"big"` or `"small"`, and **only** the method listening for that label runs. That is your if/else.
+How to read it: `receive_order` runs first (`@start`). `log_order` runs after it and receives `"order-17"`. The router also runs after `receive_order`; it returns `"needs_approval"`, and **only** the method listening for that label runs. That is your if/else.
 
 **Waiting for several steps.** `and_` waits for all, `or_` fires on the first:
 ```python
-from crewai.flow.flow import and_, or_
+from crewai.flow.flow import and_
 
-class D(Flow):
+class CheckFlow(Flow):
     @start()
-    def a(self): print("a")
-    @start()
-    def b(self): print("b")
+    def check_stock(self):
+        print("stock checked")
 
-    @listen(and_(a, b))                   # runs only after BOTH finish
-    def both(self): print("both a AND b done")
+    @start()
+    def check_payment(self):
+        print("payment checked")
+
+    @listen(and_(check_stock, check_payment))
+    def ship(self):
+        print("both checks done: shipping")
+
+CheckFlow().kickoff()
 ```
-Prints `a`, `b`, then `both a AND b done`. With `or_(a, b)` it would run as soon as either finishes.
+Prints `stock checked`, `payment checked`, then `both checks done: shipping`.
 
-## Level 6 — Putting it together: a Flow that calls a Crew
-Each Flow step can be plain Python, a single LLM call, or a whole Crew. The usual production pattern is **a Flow for the skeleton, Crews for the thinking**:
+## Level 6 — A Flow that calls a Crew (Basics Part 7)
+Each Flow step can be plain Python, one agent, or a whole Crew. The usual production pattern is **a Flow for the skeleton, Crews for the thinking**: a cheap check first, a router that stops early on a "no", and the full team only when it is worth it.
 
 ```python
-class S(BaseModel):
-    topic: str = ""
+class TripState(BaseModel):
+    question: str = ""
+    worth_it: str = ""
+    plan: str = ""
 
-class BriefFlow(Flow[S]):
+class TripFlow(Flow[TripState]):
+
     @start()
-    def get_topic(self):
-        self.state.topic = "solar power"          # could come from user input
+    def quick_check(self):
+        t = Task(
+            description="Quick opinion for a student: {question}",
+            expected_output="A verdict (yes, maybe or no) and 2 to 3 short reasons.",
+            agent=guide,
+            output_pydantic=TripVerdict,
+        )
+        out = Crew(agents=[guide], tasks=[t]).kickoff(inputs={"question": self.state.question})
+        self.state.worth_it = out.pydantic.worth_it
 
-    @listen(get_topic)
-    def run_crew(self):
-        crew = Crew(agents=[researcher, writer], tasks=[research, write])
-        return crew.kickoff(inputs={"topic": self.state.topic}).raw
+    @router(quick_check)
+    def decide(self):
+        return "stop" if self.state.worth_it == "no" else "go"
 
-    @listen(run_crew)
-    def save(self, brief):
-        open("brief.md", "w").write(brief)
+    @listen("stop")
+    def say_no(self):
+        print("Quick check says no. Stopping here, the full team was never used.")
+
+    @listen("go")
+    def full_plan(self):
+        r = Task(description="List 5 facts a student should know before this trip: {question}",
+                 expected_output="A bulleted list of 5 facts.", agent=researcher)
+        w = Task(description="Write a short plan from the facts.",
+                 expected_output="One paragraph of at most 60 words.", agent=writer, context=[r])
+        out = Crew(agents=[researcher, writer], tasks=[r, w]).kickoff(inputs={"question": self.state.question})
+        self.state.plan = out.raw
+        print(self.state.plan)
+
+flow = TripFlow()
+flow.state.question = "a weekend trip from Amman to Aqaba"
+flow.kickoff()
 ```
-The lab's Step 9 does exactly this: a cheap one-agent check first, a router that stops early on a "no-go", and the full team only if the idea passes.
+The long lab's Step 9 does the same with the coffee-shop case.
 
 ## Reference: the fields and methods in detail
 *Plain-language explanations of every box and method used above. Assumes no prior knowledge of CrewAI.*
@@ -521,7 +578,7 @@ In practice you combine them. This is also a **governance** point: a Flow gives 
 Once the ladder is clear, the lab adds the production features on top of it: **knowledge** (documents the crew can search), **memory** (facts kept between runs), **guardrails and human review** (checks on output), and a **hierarchical process** where a manager agent delegates. Each is one extra argument on the Agent, Task or Crew you already know.
 
 ## Check yourself
-1. In the Level 5 example, if `state.n` were `3` instead of `7`, which of `on_big` and `on_small` would run, and would `third` still run?
+1. In the Level 5 example, if `amount` were `50` instead of `250`, which of `ask_manager` and `approve` would run, and would `log_order` still run?
 2. What does `context=[research]` do, and what happens if you leave it out?
 3. Why does a tool's docstring matter?
 4. When would you choose a Flow over a Crew?
@@ -529,7 +586,7 @@ Once the ladder is clear, the lab adds the production features on top of it: **k
 <details>
 <summary>Answers</summary>
 
-1. `on_small` runs (the router returns `"small"`, so nothing listens for `"big"`), and `third` **still runs**: it listens to `second`, not to the router, so the routing decision does not affect it.
+1. `approve` runs (the router returns `"auto_approve"`, so nothing runs for `"needs_approval"`), and `log_order` **still runs**: it listens to `receive_order`, not to the router, so the routing decision does not affect it.
 2. It gives the writer the researcher's output as input. A sequential crew already passes earlier results along by default, so leaving it out often still works, but `context` makes the dependency explicit and lets you choose exactly which tasks feed which.
 3. It is the only description the LLM has of what the tool does and how to call it. A vague docstring leads to the tool being ignored or misused.
 4. When the order or the stopping rules must be predictable, cheap or auditable, and you can write them down in advance.
@@ -539,4 +596,4 @@ Once the ladder is clear, the lab adds the production features on top of it: **k
 1. Run Level 0, then change the persona and see how the answer shifts.
 2. Build Level 2 with a topic you care about, then break it with a vague `expected_output`.
 3. Add a custom tool, for example one that reads a local file (the lab's Exercise 2 does this).
-4. Rebuild Level 5 with your own made-up steps and a router, then open the lab at Step 9.
+4. Rebuild Level 5 with your own made-up steps and a router, then open the long lab at Step 9.
