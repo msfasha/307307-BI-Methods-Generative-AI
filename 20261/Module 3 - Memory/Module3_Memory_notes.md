@@ -1,6 +1,6 @@
 # Module 3 — Memory (Lecture Notes)
 **Course:** 307307 BI Methods for Generative AI — *Agentic AI half* | **University of Petra**
-**Reference:** Grootendorst & Alammar, *An Illustrated Guide to AI Agents* (O'Reilly, 2026), Chapter 4; and Alammar & Grootendorst, *Hands-On Large Language Models* (O'Reilly, 2024), Chapters 2 and 8 (embeddings and semantic search).
+**Reference:** Grootendorst & Alammar, *An Illustrated Guide to AI Agents* (O'Reilly, 2026), Chapter 4.
 
 > In Module 2 we gave the `TinyAgent` a brain — but it still forgets everything the moment it answers. This module fixes that. We give the agent **memory**, so it can hold a real conversation and draw on outside knowledge. In the lab you add a tiny `Memory` module and watch the agent finally remember your name.
 
@@ -9,8 +9,7 @@ By the end of this module you should be able to:
 - Explain why LLMs are **stateless** and what that means for an agent.
 - Describe **short-term memory** as the conversation history fed back into the prompt.
 - Explain the **context window** limit and two ways to manage it: **trimming** and **summarization**.
-- Explain what an **embedding** is and how **cosine similarity** measures how close two embeddings are.
-- Describe **long-term memory**, how **RAG** (retrieval-augmented generation) works, and what a **vector database** does.
+- Describe **long-term memory**, how **RAG** (retrieval-augmented generation) works, and what a **vector database** is.
 - Connect memory to **context engineering** and to reducing **hallucinations**.
 
 ## 1. The problem: LLMs are stateless
@@ -66,48 +65,16 @@ So we can't always send the entire history. Two common fixes:
 ## 5. Long-term memory and RAG
 When knowledge lives **outside** the conversation — your documents, a knowledge base — we use **long-term memory**, most commonly via **Retrieval-Augmented Generation (RAG)**.
 
-### Embeddings and similarity (the idea behind retrieval)
-In Module 2 you saw that every *token* has an embedding. An **embedding model** does the same for a **whole text**: a sentence, a paragraph or a question goes in, and **one vector** comes out that captures its meaning. It is a different kind of model from the chat LLM: it does not write text.
-
-![An embedding model turns a text into one vector](img/text_embedding.png)
-*Figure 2-10, Hands-On Large Language Models (O'Reilly, 2024).*
-
-**A vector is a point on a map.** Place every text on a map according to its vector, and **texts with similar meaning land close together**. A question is embedded onto the same map, where it lands near the texts that can answer it. Searching then means: *find the closest points.*
-
-![Each text is a point; similar texts are close](img/texts_as_points.png)
-*Figure 8-4, Hands-On Large Language Models (O'Reilly, 2024).*
-
-![A question lands near its most relevant text](img/query_nearest.png)
-*Figure 8-5, Hands-On Large Language Models (O'Reilly, 2024).*
-
-**Measuring "close": cosine similarity** (introduced in Module 2). Cosine similarity compares the **direction** of two vectors, using the angle between them:
-
-`cosine similarity = (a · b) / (‖a‖ ‖b‖)`   — the dot product divided by the product of the vector lengths.
-
-- **1** — the vectors point the same way (very similar meaning).
-- **0** — at right angles (unrelated).
-- **−1** — opposite directions.
-
-Dividing by the lengths means only the **direction** matters, not how long the vectors are.
-
-![Cosine similarity: similar, orthogonal and opposite vectors](img/cosine-similarity-vectors.original.jpg)
-*A two-dimensional picture. Real embeddings have thousands of dimensions, but the idea is the same.*
-
-### The four steps of RAG
 RAG in four steps:
-1. **Embed** — turn text into a numeric vector (an **embedding**) with an embedding model. Similar meanings get similar vectors.
-2. **Retrieve** — embed the user's question too, and find the stored items **most similar** to it (measured by **cosine similarity**). Keep the top few.
-3. **Augment** — add those retrieved pieces to the prompt as *context* alongside the question.
-4. **Generate** — the LLM answers using that added context.
+1. **Embed** — turn text into a vector (a list of numbers) with an embedding model. Similar meanings get similar vectors.
+2. **Retrieve** — embed the question too, and find the stored texts **most similar** to it (by **cosine similarity**: 1 = very similar, 0 = unrelated). Keep the top few.
+3. **Augment** — add those texts to the prompt as *context*.
+4. **Generate** — the LLM answers using that context.
 
 ![The RAG pipeline: embed, retrieve, augment, generate](img/rag.png)
 *Figure 4-15 — the four steps of retrieval-augmented generation. An Illustrated Guide to AI Agents (O'Reilly, 2026).*
 
-**Where do the vectors live?** The embeddings are kept in a **vector database**: a database built to store each vector together with its original text (and often *metadata*, such as the source or the date) and to return the stored items most similar to a query vector. For a handful of documents you can simply compare the question with every vector — that is what the lab does. For millions of vectors that becomes slow, so vector databases build an **index** that finds the *approximately* nearest vectors much faster, accepting a small chance of missing a true nearest neighbour. Examples: Chroma, Qdrant, Pinecone, Weaviate, Milvus, and the pgvector extension for PostgreSQL. (FAISS is a similarity-search *library* rather than a full database.)
-
-Two practical points:
-- **Chunking.** Long documents are usually split into smaller **chunks** before embedding, so that each vector stands for one focused piece of text.
-- **Same model.** Embed the documents and the questions with the **same** embedding model; vectors from different models cannot be compared.
+The stored vectors live in a **vector database** (e.g. Chroma, Qdrant, pgvector). Use the **same** embedding model for documents and questions.
 
 RAG is a major tool for **reducing hallucinations**: by handing the model relevant, trusted facts, it's less likely to make things up. (A more advanced version, **agentic RAG**, lets the agent *decide* what to look up and how often — we meet it again in Module 5.)
 
@@ -118,15 +85,12 @@ All of this is **context engineering**: giving the model the **right** informati
 - **"The agent remembers."** No — the model is stateless. The memory module **re-sends** the history each call; remembering is an illusion we create.
 - **"Just send the whole history every time."** It eventually overflows the context window and can dilute the model's focus. Manage it (trim/summarize/retrieve).
 - **"RAG makes the model smarter."** RAG adds **relevant facts to the prompt**; it doesn't change the model. Bad retrieval → bad answer.
-- **"Close embeddings mean the texts say the same thing."** Not always. Close means *related in meaning*: a question and its answer are close, but so can be two statements that disagree. Look at what was retrieved.
-- **"RAG always finds the right document."** A vector search returns the *nearest* items even when none of them is relevant. Look at what was retrieved; weak retrieval gives a weak answer.
 - **"More context is always better."** Too much context hurts focus and costs more tokens.
 
 ## 8. Summary
 - LLMs are **stateless**; memory is a module that **re-sends** information.
 - **Short-term memory** = the conversation history (a list of messages).
 - The **context window** is limited → manage it with **trimming** or **summarization**.
-- An **embedding** is a vector that places a text on a map of meaning; **cosine similarity** measures how close two texts are.
 - **Long-term memory** = external knowledge via **RAG** (embed → retrieve → augment → generate); the vectors are kept in a **vector database**.
 - It's all **context engineering**, and good memory reduces **hallucinations**.
 
@@ -136,8 +100,6 @@ All of this is **context engineering**: giving the model the **right** informati
 3. What is the context window, and what are two ways to keep a long conversation within it?
 4. List the four steps of RAG and say what "cosine similarity" is used for.
 5. How does giving the model retrieved context help reduce hallucinations?
-6. What does a vector database store, and why must documents and questions be embedded with the same model?
-7. What is an embedding? What does a cosine similarity of 1, 0 and −1 mean?
 
 ---
-*Figures in the slides are reproduced from Grootendorst & Alammar, An Illustrated Guide to AI Agents (O'Reilly, 2026), and Alammar & Grootendorst, Hands-On Large Language Models (O'Reilly, 2024), for internal University of Petra classroom use.*
+*Figures in the slides are reproduced from Grootendorst & Alammar, An Illustrated Guide to AI Agents (O'Reilly, 2026) for internal University of Petra classroom use.*
