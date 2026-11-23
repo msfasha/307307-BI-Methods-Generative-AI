@@ -96,7 +96,8 @@ def main():
             if label.startswith("Extended"):          # single format: the whole line is the link
                 return f"- [{label} (PDF) - (optional)]({quote(fmts[0][1])})"
             return f"- {label}: " + " · ".join(f"[{f}]({quote(h)})" for f, h in fmts)
-        rows = "\n".join(row(l, f) for l, f in links.items())
+        # optional material (extended notes) goes after everything else; sort is stable
+        rows = "\n".join(row(l, f) for l, f in sorted(links.items(), key=lambda kv: kv[0].startswith("Extended")))
         (STAGE / slug / "index.qmd").write_text(
             f'---\ntitle: "{title}"\n---\n\n{rows}\n', encoding="utf-8")
     sections = {}
