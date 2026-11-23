@@ -4,6 +4,7 @@ project:
   resources:
     - "downloads/*.zip"
     - "module-*/*.pdf"
+    - "module-*/extended/*.pdf"
     - "module-*/*.ipynb"
     - "module-*/*.csv"
     - "module-*/*.txt"
