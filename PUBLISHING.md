@@ -46,6 +46,11 @@ Code Agents) live under Module 6 `extended/`.
 
 ## Theme (keep this)
 
+This look is now the shared theme for all courses. The full spec is `petra_theme/petra_theme.md`
+(beside the course folders, copy in the Applied Statistics repo at `assets/petra-theme.md`).
+Keep `20261/site/styles.css` and `307312-Applied-Statistics/assets/petra-brand.css` in sync with it.
+
+
 Petra burgundy `#7a1f3d` on Quarto's `cosmo` theme: headings and links burgundy, navbar burgundy
 with **white** links, search icon included. All of it is in `20261/site/styles.css`. Layout: homepage lists modules under
 "Agentic AI" and "AI Governance", then Downloads (labs zip, PDFs zip, GitHub link); each module has
